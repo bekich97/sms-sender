@@ -1,0 +1,15 @@
+gui/.vscode
+gui/build
+gui/designer
+gui/dist
+gui/progress
+gui/test
+gui/venv
+gui/before_thread.py
+gui/main.spec
+gui/main.ui
+gui/main19092022.py
+gui/sms-sender.spec
+gui/send_sms.py
+server/venv
+server/db.sqlite3

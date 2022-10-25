@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobby</title>
+</head>
+<body>
+    <h1>Let's chat!</h1>
+
+    <button onclick="notifyMe()">Notify Me</button>
+
+    <form id="form">
+        <input type="text" name="message">
+    </form>
+
+    <div id="messages"></div>
+
+    <script type="text/javascript">
+        // request permission on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!Notification) {
+            alert('Desktop notifications not available in your browser. Try Chromium.');
+            return;
+            }
+        
+            if (Notification.permission !== 'granted')
+            Notification.requestPermission();
+        });
+
+        function notifyMe() {
+        	var audio = new Audio('http://127.0.0.1:8800/static/sound.mp3');
+        	audio.play();
+            if (Notification.permission !== 'granted')
+            Notification.requestPermission();
+            else {
+            var notification = new Notification("noti.title", {
+            icon: "noti.icon",
+            body: "noti.body",
+            });
+            notification.onclick = function() {
+                window.open('/panel/');
+            };
+            }
+        }
+
+        let url = `ws://${window.location.host}/ws/sms-server/main`
+
+        const chatSocket = new WebSocket(url)
+
+        chatSocket.onmessage = function(e){
+            let data = JSON.parse(e.data)
+            console.log('Data:', data)
+
+            if(data.type === 'send_to_gui'){
+                let messages = document.getElementById('messages')
+                notifyMe()
+                messages.insertAdjacentHTML('beforeend', `<div><p>${data.msg}</p></div>`)
+            }
+        }
+
+        let form = document.getElementById('form')
+        form.addEventListener('submit', (e) => {
+            e.preventDefault()
+            let message = e.target.message.value
+            chatSocket.send(JSON.stringify({
+                'phone': message,
+                "msg": "Test text"
+            }))
+            form.reset()
+        })
+    </script>
+</body>
+</html>
