@@ -13,3 +13,4 @@ gui/sms-sender.spec
 gui/send_sms.py
 server/venv
 server/db.sqlite3
+server/test.html
