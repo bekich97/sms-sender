@@ -1,1 +1,1 @@
-# sms-sender
+# SMS Sender via USB Modem (realtime with websocket)
